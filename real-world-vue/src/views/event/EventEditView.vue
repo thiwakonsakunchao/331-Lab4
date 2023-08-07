@@ -4,6 +4,7 @@ import type { ref, PropType } from 'vue'
 import EventService from '@/services/EventService'
 import { useRouter } from 'vue-router';
 import { useMessageStore } from '@/stores/message';
+import NProgress from 'nprogress'
 
 
 const props = defineProps({
