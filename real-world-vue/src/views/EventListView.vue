@@ -8,35 +8,33 @@ import { useRouter } from 'vue-router'
 import NProgress from 'nprogress'
 
 
-
 const events : Ref<Array<EventItem>> = ref([])
 
-  
-  const totalEvent = ref<number>(0)
+const router = useRouter()
 
-  // const props = defineProps({
-  //   page: {
-  //     type: Number,
-  //     required: true
-  //   },
-  //   limit: {
-  //     type: Number,
-  //     required: true
-  //   }
+const totalEvent = ref<number>(0)
 
-  // })
-
-  const router = useRouter()
-  
-   const hasNextPage = computed(() => {
+const hasNextPage = computed(() => {
     // first calculate the total page
    const totalPages = Math.ceil(totalEvent.value / 2 )
    return props.page.valueOf() < totalPages
 
    })
 
-   NProgress.start()
-EventService.getEvent(2, props.page).then((response: AxiosResponse<EventItem[]>) => {
+const props = defineProps({
+    page: {
+      type: Number,
+      required: true
+    },
+    limit: {
+      type: Number,
+      required: true
+    }
+
+  })
+
+  NProgress.start()
+  EventService.getEvent(2, props.page).then((response: AxiosResponse<EventItem[]>) => {
   events.value = response.data
   totalEvent.value = response.headers['x-total-count']
 }).catch(() => {
@@ -44,34 +42,28 @@ EventService.getEvent(2, props.page).then((response: AxiosResponse<EventItem[]>)
 }).finally(() => {
   NProgress.done()
 })
-
-
   
 
-  //  const limit = ref(props.limit)
+  
+   const limit = ref(props.limit)
+   const increaseLimit = () =>{
+    limit.value++;
+    router.push({name: 'EventList', query: { page: props.page, limit: limit.value}})
+   }
 
-
-  //  const increaseLimit = () =>{
-  //   limit.value++;
-  //   router.push({name: 'EventList', query: { page: props.page, limit: limit.value}})
-  //  }
-
-
-  //  const decreaseLimit = () =>{
-  //   if (limit.value > 1){
-  //     limit.value--;
-  //     router.push({ name: 'EventList', query: { page: props.page, limit: limit.value}})
-  //   }
-  //  }
-
-
+   const decreaseLimit = () =>{
+    if (limit.value > 1){
+      limit.value--;
+      router.push({ name: 'EventList', query: { page: props.page, limit: limit.value}})
+    }
+   }
 </script>
 
 <template>
-  <!-- <h1>Event For Good <button @click="increaseLimit">Plus</button>
+  <h1>Event For Good <button @click="increaseLimit">Plus</button>
     <button @click="decreaseLimit">Minus</button>
     {{ limit }}
-  </h1> -->
+  </h1>
 
   <main class="events">
     <EventCard v-for="event in events" :key="event.id" :event="event"></EventCard>
