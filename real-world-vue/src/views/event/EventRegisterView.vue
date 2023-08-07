@@ -26,7 +26,11 @@ function register(){
             id: props.event?.id
         }
     })
+
 }
+
+
+
 </script>
 
 <template>
