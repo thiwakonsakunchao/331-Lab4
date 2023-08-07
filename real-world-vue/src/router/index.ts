@@ -52,7 +52,7 @@ const router = createRouter({
         const eventStroe = useEventStore()
         return EventService.getEventById(id)
         .then((response) => {
-        // need to set up the data for the component
+        console.log(response.data)
         eventStroe.setEvent(response.data)
         })
         .catch((error) =>{
@@ -110,7 +110,15 @@ const router = createRouter({
     
     
 
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition){
+    if(savedPosition){
+      return savedPosition
+    }else{
+      return { top:0 }
+    }
+   
+  }
 })
 
 router.beforeEach(() => {
